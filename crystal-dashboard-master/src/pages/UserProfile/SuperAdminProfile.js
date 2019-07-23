@@ -37,7 +37,7 @@ class ProfileForm extends Component {
     data.email = this.state.email;
     if(this.props.src){
       const imageForm = new FormData();
-      imageForm.append('photo', this.props.src);
+      imageForm.append('photos', this.props.src);
       const resultUploadImg = await axios.
               post('https://dev.api.pixastudio.us/v1/photo/upload-photo',
               imageForm     
@@ -45,7 +45,7 @@ class ProfileForm extends Component {
       console.log(resultUploadImg);
       if(resultUploadImg){
         if(resultUploadImg.data.status){
-          photo_id = resultUploadImg.data.data.photo_id;
+          photo_id = resultUploadImg.data.data[0];
           console.log(photo_id)
         }
       }

@@ -62,8 +62,10 @@ class AddUser extends Component{
     name : '',
     email: '',
     phone: '',
-    avatar: '',
+    photo_id: '',
     avatarFile: '',
+    limit_card: '100',
+    out_date: '3',
     password: '',
     confirm: '',
     organization_code: '',
@@ -97,21 +99,22 @@ class AddUser extends Component{
 
   handleSubmit = async event => {
     event.preventDefault();
-    console.log(this.state)
+    console.log(new Date().getTimezoneOffset());
     this.setState({error : validate(this.state)});
     if(this.state.avatarFile){
     const formImage = new FormData();
-    formImage.append('photo',this.state.avatarFile);
-    const resultUploadImg = await Axios.
-    post('https://dev.api.pixastudio.us/v1/photo/upload-photo',
-    formImage
+    formImage.append('photos',this.state.avatarFile);
+    const resultUploadImg = await Axios.post('https://dev.api.pixastudio.us/v1/photo/upload-photo',
+    formImage,{
+      headers: {Timezone: new Date().getTimezoneOffset()}
+    }
     );
     console.log(resultUploadImg);
     if(resultUploadImg){
       console.log(typeof resultUploadImg.data.status);
     
       if(resultUploadImg.data.status){
-        await this.setState({ avatar:resultUploadImg.data.data.photo_id });
+        await this.setState({ photo_id:resultUploadImg.data.data[0] });
       }
     }
   }
@@ -134,18 +137,12 @@ class AddUser extends Component{
     
   }
   handleChange = event => {
-    if(event.target.name === 'avatar'){
+    if(event.target.name === 'avatarFile'){
       readURL(event)
       this.setState({                 
         avatarFile: event.target.files[0]
   });
-  } else if (event.target.name === 'organization_name'){
-    const selectedIndex = event.target.options.selectedIndex;
-    console.log(event.target.options[selectedIndex].getAttribute('code'));
-    this.setState({
-      [event.target.name]: event.target.value,
-    });
-    } else {
+  }  else {
     this.setState({                 
         [event.target.name]: event.target.value   
   });
@@ -157,7 +154,7 @@ console.log(this.state)
       return(
     <div className="row">
       <div className="col-md-12">
-        <div className="card">
+      <div style={{width: '100%',marginLeft:'auto',marginRight:'auto'}} className="card">
           <div className="header"><h4>ADD ADMIN ORGANIZATION</h4></div>
           <form className="form-horizontal" onSubmit={this.handleSubmit}>
             <div className="content">
@@ -187,7 +184,7 @@ console.log(this.state)
              
               <div className="form-group">
                 <label className="col-sm-3 control-label">PHONE NUMBER <span style={{'color': 'red'}}>(*)</span></label>
-                <div className="col-sm-2">
+                <div className="col-sm-9">
                   <input
                     type="text"
                     name="phone"
@@ -195,8 +192,10 @@ console.log(this.state)
                     className='form-control'/>
                     <label className="error" for="required">{this.state.error.phone}</label>
                 </div>
+                </div>
+              <div className="form-group">                
                 <label className="col-sm-3 control-label">Organization Name <span style={{'color': 'red'}}>(*)</span></label>
-                <div className="col-sm-2">
+                <div className="col-sm-9">
                   <select
                     name="organization_name"
                     onChange = {this.handleChange}
@@ -207,6 +206,69 @@ console.log(this.state)
                       </option>)}
                     </select>
                     <label className="error" for="required">{this.state.error.organization_name}</label>
+                </div>
+              </div>
+              <div className="form-group">
+                <label className="col-sm-3 control-label">Limit Card <span style={{'color': 'red'}}>(*)</span></label>
+                <div className="col-md-3">
+                  <select
+                    name="limit_card"
+                    onChange={this.handleChange}
+                    className= 'form-control'
+                  >
+                    <option>
+                      100
+                    </option>
+                    <option>
+                      200
+                    </option><option>
+                      300
+                    </option>
+                    <option>
+                      400
+                    </option>
+                    <option>
+                      500
+                    </option>
+                    <option>
+                      600
+                    </option>
+                    <option>
+                      700
+                    </option>
+                    <option>
+                      800
+                    </option>
+                    <option>
+                      900
+                    </option>
+                    <option>
+                      1000
+                    </option>
+                  </select>
+                    <label className="error" for="required">{this.state.error.limit}</label>
+                </div>
+                <label className="col-sm-2 control-label">Time <span style={{'color': 'red'}}>(*)</span></label>
+                <div className="col-md-3">
+                  <select
+                    name="out_date"
+                    onChange={this.handleChange}
+                    className= 'form-control'
+                  >
+                    <option value='3'>
+                      3 months
+                    </option>
+                    <option value='6'>
+                      6 months
+                    </option>
+                    <option value='1'>
+                      1 year
+                    </option>
+                    <option value='2'>
+                      2 years
+                    </option>
+                  </select>
+                    <label className="error" for="required">{this.state.error.limit}</label>
                 </div>
               </div>
               <div>
@@ -220,7 +282,7 @@ console.log(this.state)
                 <label className="col-sm-3 control-label"></label>
                 <div className="col-sm-9"></div>
                 <div className="col-sm-9">
-                <input  type='file' style={styleInput}  name='avatar' size = '50' onChange={this.handleChange}/>
+                <input  type='file' style={styleInput}  name='avatarFile' size = '50' onChange={this.handleChange}/>
                 </div>
                 </div>
                 </div>

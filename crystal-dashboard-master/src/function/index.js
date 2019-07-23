@@ -1,6 +1,6 @@
 
 import React from 'react';
-import Switch from 'components/Switch';
+import Switch from '../components/Switch';
 
 const SERVER_API = 'https://dev.api.pixastudio.us';
 const DOWNLOAD_IMG = '/image-upload/'

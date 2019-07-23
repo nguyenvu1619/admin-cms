@@ -6,6 +6,7 @@ import { Collapse } from 'react-bootstrap';
 class Nav extends Component {
   state = {};
   render() {
+    console.log(localStorage.getItem('admin'));
     let { location } = this.props;
     return (
       <ul className="nav">
@@ -15,43 +16,23 @@ class Nav extends Component {
             <p>Dashboard</p>
           </Link>
         </li>
-        <li className={this.isPathActive('"/admin/users') || this.state.userMenuOpen ? 'active' : null}>
-          <a onClick={() => this.setState({ userMenuOpen: !this.state.userMenuOpen })} data-toggle="collapse">
-            <i className="pe-7s-users"></i>
-            <p>User <b className="caret"></b></p>
-          </a>
-          <Collapse in={this.state.userMenuOpen}>
-            <div>
-              <ul className="nav">
-                <li className={this.isPathActive('/admin//users/list') ? 'active' : null}>
-                  <Link to="/admin/users/list">User List</Link>
-                </li>
-                <li className={this.isPathActive('/admin/users/add') ? 'active' : null}>
-                  <Link to="/admin/users/add">Add User</Link>
-                </li>
-              </ul>
-            </div>
-          </Collapse>
+        <li className={this.isPathActive('"/admin/users') ? 'active' : null}>
+        <Link to="/admin/users/list">
+              <i className="pe-7s-note2"></i>
+            <p>
+              User
+            </p>
+            </Link>
         </li>
         {localStorage.getItem('admin') ? (
-        <li className={this.isPathActive('"/admin/organizations') || this.state.OrganizationMenuOpen ? 'active' : null}>
-          <a onClick={() => this.setState({ OrganizationMenuOpen: !this.state.OrganizationMenuOpen })} data-toggle="collapse">
-            <i className="pe-7s-users"></i>
-            <p>Organization <b className="caret"></b></p>
-          </a>
-          <Collapse in={this.state.OrganizationMenuOpen}>
-            <div>
-              <ul className="nav">
-                <li className={this.isPathActive('/admin/organizations/list') ? 'active' : null}>
-                  <Link to="/admin/organizations/list">Organization List</Link>
-                </li>
-                <li className={this.isPathActive('/admin/organizations/add-user') ? 'active' : null}>
-                  <Link to="/admin/organizations/add">Add Organization</Link>
-                </li>
-              </ul>
-            </div>
-          </Collapse>
-        </li>
+         <li className={this.isPathActive('"/admin/organizations') ? 'active' : null}>
+         <Link to="/admin/organizations/list">
+               <i className="pe-7s-note2"></i>
+             <p>
+               Organization
+             </p>
+             </Link>
+         </li>
         ) : (
           <div></div>
         )}

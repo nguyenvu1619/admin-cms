@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Popup from 'reactjs-popup';
+import Modal from '../../Components/PopUp/AddOrganization';
 import { BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import FUNCTION from '../../../function';
@@ -50,6 +52,9 @@ class OrganizationList extends Component {
               <h4>Organization List</h4>
               </div>
               <div className="content">
+              <div className="col-xs-6 col-sm-6 col-md-6 col-lg-8">
+                <Modal/>
+                </div>
                 {data.length>0 ? (
                 <BootstrapTable
                   data={data}
@@ -57,7 +62,6 @@ class OrganizationList extends Component {
                   striped
                   search
                   hover
-                  insertRow
                   pagination
                   options={options}>
                     <TableHeaderColumn

@@ -59,7 +59,7 @@ class AddUser extends Component{
     name : '',
     email: '',
     phone: '',
-    avatar: '',
+    photo_id: '',
     avatarFile: '',
     password: '',
     confirm: '',
@@ -77,26 +77,28 @@ class AddUser extends Component{
   handleSubmit = async event => {
     event.preventDefault();
     this.setState({error : validate(this.state)});
-    if(this.state.avatar){
+    if(this.state.avatarFile){
     const formImage = new FormData();
-    formImage.append('photo',this.state.avatarFile);
+    formImage.append('photos',this.state.avatarFile);
     const resultUploadImg = await Axios.
     post('https://dev.api.pixastudio.us/v1/photo/upload-photo',
     formImage
     );
     if(resultUploadImg){
-      console.log(typeof resultUploadImg.data.status);
+      console.log(resultUploadImg);
       
       if(resultUploadImg.data.status){
+        const photo_id = resultUploadImg.data.data[0];
         const token = localStorage.getItem("token");
         const user = JSON.parse(localStorage.getItem('user'));
         this.setState({organization_id: user.organization_id});
-        this.setState({ avatar:resultUploadImg.data.data.photo_id });
+        this.setState({ photo_id:photo_id });
         const resultAddUser = await Axios.post('http://localhost:3001/v1/user',this.state,{
           headers: {Authorization: token}
         });
         if(resultAddUser.data.status){
           this.showNotification('success','New user has been added');
+          console.log(resultAddUser);
           } else {
             this.showNotification('error',resultAddUser.data.message);
           }
@@ -117,7 +119,7 @@ class AddUser extends Component{
   }
   }
   handleChange = event => {
-    if(event.target.name === 'avatar'){
+    if(event.target.name === 'avatarFile'){
       readURL(event)
       this.setState({                 
         avatarFile: event.target.files[0]
@@ -182,7 +184,7 @@ class AddUser extends Component{
                 <label className="col-sm-3 control-label"></label>
                 <div className="col-sm-9"></div>
                 <div className="col-sm-9">
-                <input  type='file' style={styleInput}  name='avatar' size = '50' onChange={this.handleChange}/>
+                <input  type='file' style={styleInput}  name='avatarFile' size = '50' onChange={this.handleChange}/>
                 </div>
                 </div>
                 </div>
@@ -207,6 +209,7 @@ class AddUser extends Component{
                     onChange={this.handleChange} />
                      <label className="error" for="required">{this.state.error.confirm}</label>
                 </div>
+                
               </div>
             </div>
             <div className="footer text-center">

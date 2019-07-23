@@ -116,7 +116,7 @@ class SuperAdminReportTable extends Component {
                        <TableHeaderColumn
                     dataFormat={this.indexFormat}
                     dataField='any'
-                    width="3%"
+                    width="5%"
                     isKey
                    >
                     Index
@@ -163,7 +163,7 @@ class SuperAdminReportTable extends Component {
                   <TableHeaderColumn
                     dataField='organization_id'
                     dataFormat={this.nameFormat}
-                    width="20%"
+                    width="15%"
                    >
                      Create By
                   </TableHeaderColumn>

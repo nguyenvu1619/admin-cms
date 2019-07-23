@@ -2,7 +2,32 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import NotificationSystem from 'react-notification-system';
 
-
+function calDate(date1, date2){
+  const diffTime = Math.abs(date1.getTime()-date2.getTime());
+  const year = Math.floor(diffTime/(365*24*60*60*1000));
+  const month = Math.floor((diffTime-year*365*24*60*60*1000)/(30*24*60*60*1000));
+  const day = Math.floor((diffTime-year*365*24*60*60*1000-month*30*24*60*60*1000)/(30*24*60*60*1000));
+  let string = '';
+  if(day> 1){
+    string = string.concat(`${day} days`);
+  } else 
+    {
+    string = string.concat(` ${day} day`);
+  }
+  if(month> 1){
+    string = string.concat(` ${month} months`);
+  } else 
+    {
+    string = string.concat(` ${month} month`);
+  }
+  if(year> 1){
+    string = string.concat(` ${year} years`);
+  } else 
+    {
+    string = string.concat(` ${year} day`);
+  }
+  return string;
+}
 class ProfileForm extends Component {
   constructor() {
     super();
@@ -37,7 +62,7 @@ class ProfileForm extends Component {
     data.email = this.state.email;
     if(this.props.src){
       const imageForm = new FormData();
-      imageForm.append('photo', this.props.src);
+      imageForm.append('photos', this.props.src);
       const resultUploadImg = await axios.
               post('https://dev.api.pixastudio.us/v1/photo/upload-photo',
               imageForm     
@@ -45,7 +70,7 @@ class ProfileForm extends Component {
       console.log(resultUploadImg);
       if(resultUploadImg){
         if(resultUploadImg.data.status){
-          photo_id = resultUploadImg.data.data.photo_id;
+          photo_id = resultUploadImg.data.data[0];
           console.log(photo_id)
         }
       }
@@ -57,7 +82,6 @@ class ProfileForm extends Component {
     }
     if(photo_id)
       data.photo_id = photo_id;
-      console.log(data.photo_id)
     const token = localStorage.getItem('token');
     const result = await axios.post('http://localhost:3001/v1/user/update', data, {
       headers: {Authorization : token }
@@ -65,7 +89,7 @@ class ProfileForm extends Component {
     if(result){
       console.log(result);
       const userLogin = JSON.stringify(result.data.data);
-          localStorage.setItem("user", userLogin);
+      localStorage.setItem("user", userLogin);
     };
     this.showNotification('tc');
   }
@@ -75,12 +99,13 @@ class ProfileForm extends Component {
     const data = await axios.get("http://localhost:3001/v1/user/profile",{
       'headers': {'authorization': token }
     });
-    
       if(data)
       {
         const user =data.data.data;
         user.createdAt = new Date(user.createdAt);
-        this.setState({items: user})
+        user.time_left = calDate(new Date(), new Date(user.out_date));
+        await this.setState({items: user});
+        console.log(user);  
       }
     } else {
       const urlArray = (window.location.href).split('/');
@@ -103,6 +128,7 @@ class ProfileForm extends Component {
   render() {
     console.log(localStorage.getItem('admin'))
     const { items } = this.state;
+    console.log(items);
     const isAdmin = this.props.isAdmin;
     if(items){
     return(
@@ -151,17 +177,18 @@ class ProfileForm extends Component {
           )}
         </div>
         {isAdmin ? (
+          <div>
         <div className="row">
           <div className="col-md-4">
             <div className="form-group">
-              <label>User Added</label>
-              <input type="text" className="form-control" readOnly placeholder="User Added" defaultValue='2' />
+              <label>Limit Card</label>
+              <input type="text" className="form-control" readOnly placeholder="Limit card" defaultValue={items.limit_card} />
             </div>
           </div>
           <div className="col-md-4">
             <div className="form-group">
-              <label>User Left</label>
-              <input type="text" className="form-control" readOnly placeholder="User Left" value='0' />
+              <label>Effective Card</label>
+              <input type="text" className="form-control" readOnly placeholder="Effective Card" defaultValue={items.effective_card} />
             </div>
           </div>
           <div className="col-md-4">
@@ -171,6 +198,20 @@ class ProfileForm extends Component {
             </div>
           </div>
         </div>
+        <div className="row">
+        <div className="col-md-4">
+          <div className="form-group">
+            <label>Time Left</label>
+            <input type="text" className="form-control" readOnly placeholder="User Added" defaultValue={items.time_left} />
+          </div>
+        </div>
+        <div className="col-md-4">
+          <div className="form-group">
+            <br></br>
+          </div>
+        </div>
+      </div>
+      </div>
         ) :(
           <div>
             <div className="row">

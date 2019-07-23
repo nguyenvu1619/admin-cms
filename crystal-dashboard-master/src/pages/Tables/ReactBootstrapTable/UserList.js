@@ -3,6 +3,7 @@ import { BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import Switch from 'components/Switch';
 import FUNCTION from '../../../function';
+import AddUser from '../../Components/PopUp/AddUser';
 import axios from 'axios';
 
 
@@ -38,6 +39,7 @@ class UserList extends Component {
   indexFormat(cell, row, enumObject, index){
     return <div>{index+1}</div>
 }
+
   render() {
     const { data } = this.state;
     const options = {
@@ -61,6 +63,7 @@ class UserList extends Component {
               <h4>User List</h4>
               </div>
               <div className="content">
+                <AddUser/>
                 {data.length>0 ? (
                 <BootstrapTable
                   data={data}

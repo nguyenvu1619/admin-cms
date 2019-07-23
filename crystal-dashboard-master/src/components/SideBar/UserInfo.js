@@ -4,11 +4,9 @@ import { connect } from 'react-redux';
 import cx from 'classnames';
 
 class UserInfo extends Component {
-
   state = {
     isShowingUserMenu: false
   };
-
   render() {
     const user = JSON.parse(localStorage.getItem('user'));
     const photo_id = user.avatar;
