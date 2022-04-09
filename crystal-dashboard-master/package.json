@@ -35,7 +35,7 @@
     "jest": "20.0.4",
     "lodash": "^4.17.14",
     "mdbreact": "^4.18.0",
-    "moment": "^2.18.1",
+    "moment": "^2.29.2",
     "object-assign": "4.1.1",
     "pe7-icon": "^1.0.4",
     "postcss-flexbugs-fixes": "3.2.0",
